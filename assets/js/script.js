@@ -26,24 +26,24 @@ let displayCurrConditions = function (cityName, data) {
 	currentStatsContainer.textContent = "";
 
 	// create current day span element
-	let dailySpan = document.createElement("span");
-	dailySpan.setAttribute = ("style", "display:flex align-items:center");
+	let currentSpan = document.createElement("span");
+	currentSpan.setAttribute = ("style", "display:flex align-items:center");
 
 	// create h2 element
-	let dailyHeader = document.createElement("h2");
-	dailyHeader.setAttribute("style", "display:inline");
-	dailyHeader.setAttribute("id", "cityName");
-	dailyHeader.setAttribute("class", "display-4");
+	let currentHeader = document.createElement("h2");
+	currentHeader.setAttribute("style", "display:inline");
+	currentHeader.setAttribute("id", "cityName");
+	currentHeader.setAttribute("class", "display-4");
 
 	// create img
-	let dailyIcon = document.createElement("img");
-	dailyIcon.setAttribute("style", "display:inline");
-	dailyIcon.setAttribute("id", "symbolEl");
+	let currentIcon = document.createElement("img");
+	currentIcon.setAttribute("style", "display:inline");
+	currentIcon.setAttribute("id", "symbolEl");
 
 	// append elements to container
-	dailySpan.appendChild(dailyHeader);
-	dailySpan.appendChild(dailyIcon);
-	currentStatsContainer.appendChild(dailySpan);
+	currentSpan.appendChild(currentHeader);
+	currentSpan.appendChild(currentIcon);
+	currentStatsContainer.appendChild(currentSpan);
 
 	let symbolEl = document.getElementById("symbolEl");
 	let cityNameEl = document.getElementById("cityName");
@@ -73,6 +73,7 @@ let displayCurrConditions = function (cityName, data) {
 		"p-2 col-6 col-md-3 col-lg-2 col-xxl-1 border border-primary rounded"
 	);
 
+  // logic to set uv background color 
 	if (data.current.uvi <= 2.5) {
 		uvEl.setAttribute("style", "background-color: red; color: white");
 	} else if (data.current.uvi <= 5) {
@@ -85,9 +86,56 @@ let displayCurrConditions = function (cityName, data) {
 		uvEl.setAttribute("style", "background-color: fuchsia;");
 	}
 
+  // add stats elements to stats container
 	currentStatsContainer.appendChild(tempEl);
 	currentStatsContainer.appendChild(windEl);
 	currentStatsContainer.appendChild(humidityEl);
 	currentStatsContainer.appendChild(uvEl);
 };
 
+let displayForecast = function (data) {
+	// clear previous data
+	forecastContainer.textContent = "";
+	forecastHeader.textContent = "";
+
+	// create header element
+	forecastHeader.textContent = "5-Day Forecast:";
+
+	for (i = 0; i < 5; i++) {
+		let forecastCard = document.createElement("div");
+		forecastCard.setAttribute(
+			"class",
+			"col-12 col-md-6 col-lg-2 border border-info rounded p-1"
+		);
+		forecastCard.setAttribute("style", "background-color: orange");
+
+		let forecastDate = document.createElement("h5");
+		forecastDate.textContent = "(" + m + "/" + (d + (i + 1)) + "/" + y + ")";
+
+		let forecastSymbol = document.createElement("img");
+		forecastSymbol.setAttribute(
+			"src",
+			"https://openweathermap.org/img/wn/" +
+				data.daily[i].weather[0].icon +
+				".png"
+		);
+
+		let weeklyTemp = document.createElement("p");
+		weeklyTemp.textContent = "Temp: " + data.daily[i].temp.day + " °F";
+
+		let weeklyWind = document.createElement("p");
+		weeklyWind.textContent = "Wind: " + data.daily[i].wind_speed + " MPH";
+
+		let weeklyHumidity = document.createElement("p");
+		weeklyHumidity.textContent = "Humidity: " + data.daily[i].humidity + " %";
+
+		// Append elements to cards
+		forecastCard.appendChild(forecastDate);
+		forecastCard.appendChild(forecastSymbol);
+		forecastCard.appendChild(weeklyTemp);
+		forecastCard.appendChild(weeklyWind);
+		forecastCard.appendChild(weeklyHumidity);
+
+		forecastContainer.appendChild(forecastCard);
+	}
+};
